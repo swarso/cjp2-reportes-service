@@ -1,0 +1,20 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: REPORTES-SERVICE
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+
+colegio:
+  nombre: Colegio Juan Pablo II
