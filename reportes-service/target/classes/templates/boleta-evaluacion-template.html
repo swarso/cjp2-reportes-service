@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Boleta de Evaluacion</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 12mm 14mm;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 8.5pt;
+            margin: 0; padding: 0;
+            color: #111;
+        }
+        table { border-collapse: collapse; width: 100%; }
+
+        /* ── HEADER ── */
+        .header-table td { padding: 2px 0; vertical-align: middle; }
+        .cell-logo { width: 18%; }
+        .logo-img { height: 60px; max-width: 100%; }
+        .cell-titulo { width: 82%; text-align: center; }
+        .colegio-nombre { font-size: 14pt; font-weight: bold; text-decoration: underline; }
+        .colegio-subtitulo { font-size: 9pt; font-weight: bold; margin-top: 2px; }
+        .colegio-acuerdo { font-size: 8pt; margin-top: 1px; }
+        .reporte-nombre { font-size: 12pt; font-weight: bold; margin-top: 8px; text-align: center; }
+
+        /* ── DATOS ── */
+        .datos-table { margin-top: 10px; margin-bottom: 10px; }
+        .datos-table td { padding: 2px 0; font-size: 9pt; }
+        .datos-label { font-weight: bold; white-space: nowrap; padding-right: 6px; }
+
+        /* ── MATERIAS ── */
+        .materias-table { border: 1px solid #333; }
+        .materias-table th {
+            background: #e5e5e5; font-size: 7.5pt; font-weight: bold;
+            padding: 4px 4px; border: 1px solid #333;
+            text-align: center;
+        }
+        .materias-table td {
+            padding: 3px 4px; font-size: 8pt;
+            border-left: 1px solid #333; border-right: 1px solid #333;
+            border-bottom: 1px solid #ccc;
+        }
+        .th-clave { width: 10%; }
+        .th-materia { width: 46%; text-align: left; }
+        .th-cal { width: 11%; }
+        .td-clave { text-align: center; font-family: monospace; }
+        .td-materia { text-align: left; }
+        .td-cal { text-align: center; font-variant-numeric: tabular-nums; }
+
+        /* ── FIRMA ── */
+        .firma-table { margin-top: 50px; }
+        .firma-table td { text-align: center; }
+        .firma-linea { border-top: 1px solid #111; margin: 0 25mm; padding-top: 4px; font-size: 9pt; }
+        .firma-nombre { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══ -->
+<table class="header-table">
+    <tr>
+        <td class="cell-logo">
+            <img th:if="${reporte.logoBase64 != null and !reporte.logoBase64.isEmpty()}"
+                 th:src="${reporte.logoBase64}" class="logo-img" th:alt="${reporte.nombreInstitucion}"/>
+        </td>
+        <td class="cell-titulo">
+            <div class="colegio-nombre" th:text="${reporte.nombreInstitucion}">Colegio Juan Pablo II</div>
+            <div class="colegio-subtitulo">
+                <span th:text="${reporte.descripcionEspecialidad}">BACHILLERATO GENERAL</span>
+                <span th:text="${(reporte.modulo == 2 or reporte.modulo == 5) ? 'SEMESTRAL' : 'CUATRIMESTRAL'}">CUATRIMESTRAL</span>
+            </div>
+            <div class="colegio-acuerdo">
+                SEGÚN ACUERDO <span th:text="${reporte.numAcuerdoIncorporacion}">—</span>
+                C.C.T. <span th:text="${reporte.cct}">—</span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="reporte-nombre">BOLETA DE EVALUACIÓN</div>
+
+<!-- ══════════════════════ DATOS ALUMNO/CURSO ══ -->
+<table class="datos-table">
+    <tr>
+        <td class="datos-label" style="width:10%;">DETPO.:</td>
+        <td style="width:40%;">SERVICIOS ESCOLARES</td>
+        <td class="datos-label" style="width:12%;">CURSO:</td>
+        <td style="width:38%;" th:text="${reporte.descripcionCurso}">—</td>
+    </tr>
+    <tr>
+        <td class="datos-label">CARRERA:</td>
+        <td colspan="3">
+            <span th:text="${reporte.claveEspecialidad}">—</span>
+            <span th:text="${reporte.descripcionEspecialidad}">—</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="datos-label">ALUMNO (A):</td>
+        <td colspan="3" style="padding-left:4px;" th:text="${reporte.nombreCompleto}">—</td>
+    </tr>
+    <tr>
+        <td class="datos-label">GRUPO:</td>
+        <td th:text="${reporte.descripcionGrupo}">—</td>
+        <td class="datos-label">TURNO:</td>
+        <td th:text="${reporte.descripcionTurno}">—</td>
+    </tr>
+    <tr>
+        <td class="datos-label">PERIODO:</td>
+        <td th:text="${reporte.descripcionPeriodoEscolar}">—</td>
+        <td class="datos-label">GENERACIÓN:</td>
+        <td style="padding-left:4px;" th:text="${reporte.descripcionGeneracion}">—</td>
+    </tr>
+</table>
+
+<!-- ══════════════════════ MATERIAS ══ -->
+<table class="materias-table">
+    <thead>
+        <tr>
+            <th class="th-clave">CVE ASIG</th>
+            <th class="th-materia">NOMBRE DE LA ASIGNATURA Y/O MODULO</th>
+            <th class="th-cal">PARCIAL 1</th>
+            <th class="th-cal">PARCIAL 2</th>
+            <th class="th-cal" th:if="${reporte.modulo == 2 or reporte.modulo == 5}">PARCIAL 3</th>
+            <th class="th-cal">FALTAS</th>
+            <th class="th-cal">FINAL</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="materia : ${reporte.materias}">
+            <td class="td-clave" th:text="${materia.claveMateria}">—</td>
+            <td class="td-materia" th:text="${materia.descripcionMateria}">—</td>
+            <td class="td-cal" th:text="${materia.cal1 != null ? #numbers.formatDecimal(materia.cal1, 1, 0) : '—'}">0</td>
+            <td class="td-cal" th:text="${materia.cal2 != null ? #numbers.formatDecimal(materia.cal2, 1, 0) : '—'}">0</td>
+            <td class="td-cal" th:if="${reporte.modulo == 2 or reporte.modulo == 5}"
+                th:text="${materia.cal3 != null ? #numbers.formatDecimal(materia.cal3, 1, 0) : '—'}">0</td>
+            <td class="td-cal" th:text="${materia.faltas != null ? materia.faltas : '—'}">0</td>
+            <td class="td-cal" th:text="${materia.calFinal != null ? #numbers.formatDecimal(materia.calFinal, 1, 0) : '—'}">0</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ══════════════════════ FIRMA ══ -->
+<table class="firma-table">
+    <tr>
+        <td>
+            <div class="firma-linea">
+                <div class="firma-nombre" th:text="${reporte.director}">—</div>
+                DIRECTOR DEL PLANTEL
+            </div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

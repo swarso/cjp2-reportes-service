@@ -16,6 +16,7 @@ public class ListaCalificacionesReporteDto {
     private String periodoEscolar;
     private String fechaReporte;
     private boolean mostrarCalifOrdinaria3;
+    private String nombreDocente;
     private List<AlumnoCalificacionReporteDto> alumnos;
 
 }

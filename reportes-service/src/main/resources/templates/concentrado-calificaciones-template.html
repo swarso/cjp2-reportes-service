@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Concentrado de Calificaciones</title>
+    <style>
+        @page {
+            size: letter landscape;
+            margin: 10mm 10mm;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 8pt;
+            margin: 0; padding: 0;
+            color: #111;
+        }
+        table { border-collapse: collapse; width: 100%; }
+
+        /* ── HEADER ── */
+        .header-table td { padding: 2px 0; vertical-align: middle; }
+        .cell-logo { width: 12%; }
+        .logo-img { height: 50px; max-width: 100%; }
+        .cell-titulo { width: 88%; text-align: center; }
+        .colegio-nombre { font-size: 12pt; font-weight: bold; text-decoration: underline; }
+        .reporte-nombre { font-size: 10pt; font-weight: bold; margin-top: 4px; }
+
+        /* ── DATOS ── */
+        .datos-table { margin-top: 6px; margin-bottom: 8px; }
+        .datos-table td { padding: 2px 0; font-size: 9pt; }
+        .datos-label { font-weight: bold; }
+        .datos-parcial { text-align: center; font-size: 11pt; font-weight: bold; }
+
+        /* ── ALUMNOS ── */
+        .alumnos-table { border: 1px solid #333; table-layout: fixed; }
+        .alumnos-table th {
+            background: #e5e5e5; font-size: 7pt; font-weight: bold;
+            padding: 4px 2px; border: 1px solid #333;
+            text-align: center; vertical-align: middle;
+            line-height: 1.15;
+            white-space: normal;
+            word-wrap: break-word; overflow-wrap: break-word;
+        }
+        .alumnos-table td {
+            padding: 3px 2px; font-size: 9pt;
+            border-left: 1px solid #333; border-right: 1px solid #333;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        .th-nocontrol { width: 4%; }
+        .th-nombre { width: 18%; text-align: left; }
+        .th-mat { width: auto; }
+        .td-nocontrol { text-align: center; font-family: monospace; font-size: 7.5pt; }
+        .td-nombre { text-align: left; font-size: 8pt; }
+        .td-reprobado { background-color: #f08a7d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══ -->
+<table class="header-table">
+    <tr>
+        <td class="cell-logo">
+            <img th:if="${reporte.logoBase64 != null and !reporte.logoBase64.isEmpty()}"
+                 th:src="${reporte.logoBase64}" class="logo-img" th:alt="${reporte.nombreColegio}"/>
+        </td>
+        <td class="cell-titulo">
+            <div class="colegio-nombre" th:text="${reporte.nombreColegio}">Colegio Juan Pablo II</div>
+            <div class="reporte-nombre">CONCENTRADO DE CALIFICACIONES</div>
+        </td>
+    </tr>
+</table>
+
+<!-- ══════════════════════ DATOS GRUPO/CURSO/PARCIAL ══ -->
+<table class="datos-table">
+    <tr>
+        <td class="datos-label" style="width:10%;">GRUPO:</td>
+        <td style="width:35%;" th:text="${reporte.descripcionGrupo != null ? reporte.descripcionGrupo : '—'}">—</td>
+        <td class="datos-parcial" style="width:35%;" th:text="${reporte.parcialLabel}">PARCIAL</td>
+        <td style="width:20%; text-align:right;" th:text="${reporte.periodoEscolar != null ? reporte.periodoEscolar : '—'}">—</td>
+    </tr>
+    <tr>
+        <td class="datos-label">CURSO:</td>
+        <td colspan="3" th:text="${reporte.descripcionCurso != null ? reporte.descripcionCurso : '—'}">—</td>
+    </tr>
+</table>
+
+<!-- ══════════════════════ ALUMNOS x MATERIAS ══ -->
+<table class="alumnos-table">
+    <thead>
+        <tr>
+            <th class="th-nocontrol">#CTRL</th>
+            <th class="th-nombre">NOMBRE</th>
+            <th class="th-mat" th:each="materia : ${reporte.materias}" th:text="${materia}">MATERIA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="alumno : ${reporte.alumnos}">
+            <td class="td-nocontrol" th:text="${alumno.nocontrol}">—</td>
+            <td class="td-nombre" th:text="${alumno.nombreAlumno}">—</td>
+            <td th:each="cal : ${alumno.calificaciones}"
+                th:class="${'td-mat' + (cal != null and cal.doubleValue() lt 6 ? ' td-reprobado' : '')}"
+                th:text="${cal != null ? #numbers.formatDecimal(cal, 1, 0) : '—'}">—</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
