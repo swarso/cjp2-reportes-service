@@ -51,6 +51,12 @@
         .td-nocontrol { text-align: center; font-family: monospace; }
         .td-nombre { text-align: left; }
         .td-cal { text-align: center; font-variant-numeric: tabular-nums; }
+
+        /* ── FIRMA ── */
+        .firma-table { margin-top: 40px; }
+        .firma-table td { text-align: center; width: 45%; }
+        .firma-linea { border-top: 1px solid #111; margin: 0 12mm; padding-top: 4px; font-size: 8.5pt; }
+        .firma-nombre { font-weight: bold; }
     </style>
 </head>
 <body>
@@ -96,6 +102,7 @@
             <th class="th-cal">CALIF 2.</th>
             <th class="th-cal" th:if="${reporte.mostrarCalifOrdinaria3}">CALIF 3.</th>
             <th class="th-cal">FINAL</th>
+            <th class="th-cal">FALTAS</th>
         </tr>
     </thead>
     <tbody>
@@ -107,8 +114,22 @@
             <td class="td-cal" th:text="${alumno.cal2 != null ? #numbers.formatDecimal(alumno.cal2, 1, 2) : '—'}">0.00</td>
             <td class="td-cal" th:if="${reporte.mostrarCalifOrdinaria3}" th:text="${alumno.cal3 != null ? #numbers.formatDecimal(alumno.cal3, 1, 2) : '—'}">0.00</td>
             <td class="td-cal" th:text="${alumno.calFinal != null ? #numbers.formatDecimal(alumno.calFinal, 1, 2) : '—'}">0.00</td>
+            <td class="td-cal" th:text="${alumno.faltas != null ? alumno.faltas : '—'}">0</td>
         </tr>
     </tbody>
+</table>
+
+<!-- ══════════════════════ FIRMA ══ -->
+<table class="firma-table">
+    <tr>
+        <td>
+            <div class="firma-linea">
+                <div class="firma-nombre" th:text="${reporte.nombreDocente != null ? reporte.nombreDocente : ''}">&#160;</div>
+                Nombre y firma del docente
+            </div>
+        </td>
+        <td></td>
+    </tr>
 </table>
 
 </body>

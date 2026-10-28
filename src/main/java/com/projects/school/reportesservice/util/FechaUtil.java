@@ -15,4 +15,8 @@ public class FechaUtil {
     public static String hoyLarga() {
         return LocalDate.now().format(FECHA_FORMATTER);
     }
+
+    public static String formatear(LocalDate fecha) {
+        return fecha != null ? fecha.format(FECHA_FORMATTER) : "";
+    }
 }

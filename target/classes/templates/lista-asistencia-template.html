@@ -52,6 +52,7 @@
         .td-nombre { text-align: left; }
         .td-fecha { text-align: center; }
         .asistio-si { color: #15803d; font-weight: bold; }
+        .asistio-retardo { color: #b45309; font-weight: bold; }
         .asistio-no { color: #b91c1c; font-weight: bold; }
     </style>
 </head>
@@ -99,7 +100,7 @@
             <td class="td-nocontrol" th:text="${alumno.nocontrol}">—</td>
             <td class="td-nombre" th:text="${alumno.nombreAlumno}">—</td>
             <td class="td-fecha" th:each="asistencia : ${alumno.asistencias}"
-                th:class="${'td-fecha ' + (asistencia == 'Sí' ? 'asistio-si' : (asistencia == 'No' ? 'asistio-no' : ''))}"
+                th:class="${'td-fecha ' + (asistencia == 'Sí' ? 'asistio-si' : (asistencia == 'Retardo' ? 'asistio-retardo' : (asistencia == 'No' ? 'asistio-no' : '')))}"
                 th:text="${asistencia}">—</td>
         </tr>
     </tbody>

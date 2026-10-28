@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Constancia</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 15mm 18mm;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12.5pt;
+            line-height: 1.8;
+            margin: 0; padding: 0;
+            color: #111;
+        }
+        table { border-collapse: collapse; width: 100%; }
+
+        /* ── HEADER ── */
+        .header-table td { padding: 2px 0; vertical-align: middle; }
+        .cell-logo { width: 18%; }
+        .logo-img { height: 80px; max-width: 100%; }
+        .cell-titulo { width: 82%; text-align: center; }
+        .colegio-nombre { font-size: 18pt; font-weight: bold; text-decoration: underline; }
+        .colegio-subtitulo { font-size: 11pt; font-weight: bold; margin-top: 3px; }
+        .colegio-acuerdo { font-size: 10pt; margin-top: 2px; }
+
+        /* ── CUERPO (margenes generosos para que la carta ocupe toda la hoja) ── */
+        .fecha-emision { text-align: right; margin-top: 70px; }
+        .destinatario { margin-top: 55px; }
+        .parrafo { text-align: justify; text-indent: 12mm; margin-top: 60px; }
+
+        /* ── FIRMA ── */
+        .firma-table { margin-top: 130px; }
+        .firma-table td { text-align: center; }
+        .firma-linea { border-top: 1px solid #111; margin: 0 25mm; padding-top: 5px; font-size: 11pt; }
+        .firma-nombre { font-weight: bold; }
+
+        /* ── PIE DE PÁGINA ── */
+        .pie-pagina {
+            margin-top: 40px;
+            text-align: center; font-size: 8.5pt; font-weight: bold;
+            border-top: 1px solid #333; padding-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══ -->
+<table class="header-table">
+    <tr>
+        <td class="cell-logo">
+            <img th:if="${reporte.logoBase64 != null and !reporte.logoBase64.isEmpty()}"
+                 th:src="${reporte.logoBase64}" class="logo-img" th:alt="${reporte.nombreInstitucion}"/>
+        </td>
+        <td class="cell-titulo">
+            <div class="colegio-nombre" th:text="${reporte.nombreInstitucion}">Colegio Juan Pablo II</div>
+            <div class="colegio-subtitulo">
+                <span th:text="${reporte.descripcionEspecialidad}">BACHILLERATO GENERAL</span>
+                <span th:text="${(reporte.modulo == 2 or reporte.modulo == 5) ? 'SEMESTRAL' : 'CUATRIMESTRAL'}">CUATRIMESTRAL</span>
+            </div>
+            <div class="colegio-acuerdo">
+                SEGÚN ACUERDO <span th:text="${reporte.numAcuerdoIncorporacion}">—</span>
+                C.C.T. <span th:text="${reporte.cct}">—</span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- ══════════════════════ FECHA Y DESTINATARIO ══ -->
+<div class="fecha-emision">
+    <span th:text="${reporte.municipioInstitucion}">León</span>, Gto., a <span th:text="${fechaHoy}">—</span>
+</div>
+
+<div class="destinatario">A quien corresponda:</div>
+
+<!-- ══════════════════════ CUERPO ══ -->
+<div class="parrafo">
+    Por medio de la presente se hace constar que
+    <span th:text="${reporte.genero == 2 ? 'la C.' : 'el C.'}">el C.</span>
+    <strong th:text="${reporte.nombreCompleto}">—</strong>;
+    es <span th:text="${reporte.genero == 2 ? 'alumna activa' : 'alumno activo'}">alumno activo</span>
+    del <span th:text="${reporte.descripcionCurso}">—</span>, del
+    <span th:text="${reporte.nombreInstitucion}">—</span>; con número de matrícula
+    <span th:text="${reporte.noControlAlumno}">—</span> en la modalidad
+    <span th:text="${(reporte.modulo == 2 or reporte.modulo == 5) ? 'SEMESTRAL' : 'CUATRIMESTRAL'}">CUATRIMESTRAL</span>
+    en el periodo del <span th:text="${fechaInicioPeriodo}">—</span> al
+    <span th:text="${fechaFinPeriodo}">—</span>.
+</div>
+
+<div class="parrafo">
+    De antemano le doy las gracias viéndose beneficiada la interesada, quedando como su atento y seguro servidor
+    para cualquier duda o aclaración al teléfono <span th:text="${reporte.telefonoInstitucion}">—</span>.
+</div>
+
+<div class="parrafo" style="text-indent:0; text-align:center;">Atte.</div>
+
+<!-- ══════════════════════ FIRMA ══ -->
+<table class="firma-table">
+    <tr>
+        <td>
+            <div class="firma-linea">
+                <div class="firma-nombre" th:text="${reporte.director}">—</div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- ══════════════════════ PIE DE PÁGINA ══ -->
+<div class="pie-pagina">
+    <span th:text="${reporte.nombreInstitucion}">—</span>; DIRECCIÓN:
+    <span th:text="${reporte.direccionInstitucion}">—</span>
+    <span th:text="${reporte.municipioInstitucion}">—</span>, GTO. TEL.
+    <span th:text="${reporte.telefonoInstitucion}">—</span>
+</div>
+
+</body>
+</html>

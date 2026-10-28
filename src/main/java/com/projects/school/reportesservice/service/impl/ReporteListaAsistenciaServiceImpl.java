@@ -83,7 +83,8 @@ public class ReporteListaAsistenciaServiceImpl implements ReporteListaAsistencia
             List<String> asistencias = new ArrayList<>();
             for (LocalDate fecha : fechas) {
                 Short asistio = porFecha.get(fecha);
-                asistencias.add(asistio == null ? "—" : (asistio == 1 ? "Sí" : "No"));
+                asistencias.add(asistio == null ? "—"
+                        : (asistio == 1 ? "Sí" : (asistio == 2 ? "Retardo" : "No")));
             }
             alumnos.add(new AlumnoAsistenciaReporteDto(nocontrol, nombrePorAlumno.get(nocontrol), asistencias));
         }

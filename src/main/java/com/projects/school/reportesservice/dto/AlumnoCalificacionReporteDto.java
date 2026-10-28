@@ -13,5 +13,6 @@ public class AlumnoCalificacionReporteDto {
     private Double cal2;
     private Double cal3;
     private Double calFinal;
+    private Integer faltas;
 
 }

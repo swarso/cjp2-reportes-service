@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.projects.school.reportesservice.client.AlumnoServiceClient;
 import com.projects.school.reportesservice.dto.AlumnoCalificacionReporteDto;
 import com.projects.school.reportesservice.dto.CalificacionDetalleDto;
+import com.projects.school.reportesservice.dto.DocenteDto;
 import com.projects.school.reportesservice.dto.ListaCalificacionesReporteDto;
 import com.projects.school.reportesservice.service.ReporteListaCalificacionesService;
 import com.projects.school.reportesservice.util.FechaUtil;
@@ -52,8 +53,15 @@ public class ReporteListaCalificacionesServiceImpl implements ReporteListaCalifi
         List<AlumnoCalificacionReporteDto> alumnos = new ArrayList<>();
         for (CalificacionDetalleDto d : detalle) {
             alumnos.add(new AlumnoCalificacionReporteDto(
-                    d.getNocontrol(), d.getNombreAlumno(), d.getCal1(), d.getCal2(), d.getCal3(), d.getCalFinal()));
+                    d.getNocontrol(), d.getNombreAlumno(), d.getCal1(), d.getCal2(), d.getCal3(), d.getCalFinal(),
+                    d.getFaltas()));
         }
+
+        DocenteDto docente = alumnoServiceClient.getDocenteByGrupoAndMateria(idGrupo, idMateria);
+        String nombreDocente = docente == null ? null : String.join(" ",
+                nullToEmpty(docente.getApaternoPersona()),
+                nullToEmpty(docente.getAmaternoPersona()),
+                nullToEmpty(docente.getNombrePersona())).trim().replaceAll("\\s+", " ");
 
         ListaCalificacionesReporteDto reporte = new ListaCalificacionesReporteDto(
                 nombreColegio,
@@ -63,11 +71,16 @@ public class ReporteListaCalificacionesServiceImpl implements ReporteListaCalifi
                 periodoEscolar,
                 FechaUtil.hoyLarga(),
                 mostrarCalifOrdinaria3,
+                nombreDocente,
                 alumnos);
 
         Map<String, Object> variables = new HashMap<>();
         variables.put("reporte", reporte);
 
         return pdfGeneratorUtil.generatePdf("lista-calificaciones-template", variables);
+    }
+
+    private String nullToEmpty(String value) {
+        return value == null ? "" : value;
     }
 }
