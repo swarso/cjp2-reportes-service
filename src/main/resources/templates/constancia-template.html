@@ -84,9 +84,19 @@
     <strong th:text="${reporte.nombreCompleto}">—</strong>;
     es <span th:text="${reporte.genero == 2 ? 'alumna activa' : 'alumno activo'}">alumno activo</span>
     del <span th:text="${reporte.descripcionCurso}">—</span>, del
-    <span th:text="${reporte.nombreInstitucion}">—</span>; con número de matrícula
-    <span th:text="${reporte.noControlAlumno}">—</span> en la modalidad
-    <span th:text="${(reporte.modulo == 2 or reporte.modulo == 5) ? 'SEMESTRAL' : 'CUATRIMESTRAL'}">CUATRIMESTRAL</span>
+    <span th:text="${reporte.nombreInstitucion}">—</span>;
+    <!-- Licenciatura (modulo 3): la descripcion ya trae "LICENCIATURA EN ...".
+         Preparatoria (modulos 1,2,4,5) y diplomados: se indica la especialidad. -->
+    <th:block th:if="${reporte.descripcionEspecialidad != null}">
+        <th:block th:if="${reporte.modulo == 3 and reporte.descripcionEspecialidad.toUpperCase().startsWith('LICENCIATURA')}">
+            <strong>EN LA <span th:text="${reporte.descripcionEspecialidad}">LICENCIATURA EN PSICOLOGIA</span></strong>
+        </th:block>
+        <th:block th:unless="${reporte.modulo == 3 and reporte.descripcionEspecialidad.toUpperCase().startsWith('LICENCIATURA')}">
+            en la especialidad <strong th:text="${reporte.descripcionEspecialidad}">BACHILLERATO GENERAL</strong>
+        </th:block>
+    </th:block>
+    con número de matrícula
+    <strong th:text="${reporte.noControlAlumno}">—</strong>
     en el periodo del <span th:text="${fechaInicioPeriodo}">—</span> al
     <span th:text="${fechaFinPeriodo}">—</span>.
 </div>
