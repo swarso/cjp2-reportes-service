@@ -15,6 +15,8 @@ eureka:
     # algo tipo "nombre-de-la-mac.local", solo resoluble por mDNS) -- cualquier cliente
     # reactivo (Netty) que enrute por lb://REPORTES-SERVICE truena con
     # UnknownHostException al no poder resolver ".local". Con esto se registra por IP.
+    #prueba commit    
+    
     prefer-ip-address: true
   client:
     register-with-eureka: true
