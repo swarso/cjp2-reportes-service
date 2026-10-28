@@ -9,6 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class AsistenciaReporteDto {
 
+    //Prueba de comentario
     private String nombreColegio;
     private String logoBase64;
     private String descripcionMateria;
